@@ -34,10 +34,6 @@ public class Transporte {
 		return plazasTotales;
 	}
 
-	public void setPlazasTotales(int plazasTotales) {
-		this.plazasTotales = plazasTotales;
-	}
-
 	public int getPlazasLibres() {
 		return plazasLibres;
 	}
@@ -48,10 +44,6 @@ public class Transporte {
 
 	public int getPlazasReservadasTotales() {
 		return plazasReservadasTotales;
-	}
-
-	public void setPlazasReservadasTotales(int plazasReservadasTotales) {
-		this.plazasReservadasTotales = plazasReservadasTotales;
 	}
 
 	public int getPlazasReservadasLibres() {
@@ -66,16 +58,8 @@ public class Transporte {
 		return descuentoJoven;
 	}
 
-	public void setDescuentoJoven(double descuentoJoven) {
-		this.descuentoJoven = descuentoJoven;
-	}
-
 	public double getDescuentoViejo() {
 		return descuentoViejo;
-	}
-
-	public void setDescuentoViejo(double descuentoViejo) {
-		this.descuentoViejo = descuentoViejo;
 	}
 
 	public void llenarPlaza() {
@@ -87,7 +71,7 @@ public class Transporte {
 		this.plazasLibres-=1;
 	}
 	
-	public void obtenerRestrinciones() {
+	public int obtenerRestrinciones() {
 		switch (this.nivelRestricciones) {
 			case 0:
 				this.descuentoJoven=0.40;
@@ -104,6 +88,7 @@ public class Transporte {
 				this.plazasLibres=this.plazasTotales;
 				this.plazasReservadasTotales=(int) (this.plazasTotales*0.6);
 				this.plazasReservadasLibres=this.plazasReservadasTotales;
+				this.descuentoJoven=1.00;
 				this.descuentoViejo=1.20;
 				break;
 			case 3:
@@ -123,8 +108,9 @@ public class Transporte {
 				this.descuentoViejo=-1;
 				break;
 			default:
-				break;
+				return -1;
 		}
+		return 0;
 	}
 
 	@Override

@@ -28,9 +28,6 @@ public class App
 				e.printStackTrace();
 			}
 
-			//evaluarPersona(nivel, juan, coche);
-			//evaluarPersona(nivel, maria, coche);
-			//evaluarPersona(nivel, drGru, coche);
 		}
 		
 	} 
@@ -47,8 +44,8 @@ public class App
         	nivel=2;
         else if (n<=500)
         	nivel=3;
-        else if (n>500)
-        	nivel= 4;
+        else
+        	nivel=4;
 
     	return nivel;
     }

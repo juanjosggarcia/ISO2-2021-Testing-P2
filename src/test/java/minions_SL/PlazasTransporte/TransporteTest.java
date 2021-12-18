@@ -22,6 +22,7 @@ public class TransporteTest {
 	public void before() {
 		try {
 			transporte=new Transporte(0, 5);
+			transporte.obtenerRestrinciones();
 			//System.out.println(transporte.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -34,6 +35,15 @@ public class TransporteTest {
 		/*
 		if (transporte==null)
 		System.out.println("transporte eliminado");*/
+	}
+	
+	@Test
+	public void testObtenerRestrinciones() {
+		//nivel invalido
+		int esperado=-1;
+		transporte.setNivelRestricciones(10);
+    	int actual=transporte.obtenerRestrinciones();
+		assertEquals(esperado, actual);
 	}
 
 	@Test

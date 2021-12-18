@@ -33,25 +33,31 @@ public class Persona {
     		}
     		if (transporte.getNivelRestricciones()<2) {
     			transporte.llenarPlaza();
+    			/*
     			if (this.edad<23)
     				this.descuento=transporte.getDescuentoJoven();
     			if (this.edad>65)
-    				this.descuento=transporte.getDescuentoViejo();
+    				this.descuento=transporte.getDescuentoViejo();*/
     		}else {
     			if (this.esEsencial==true && transporte.getPlazasReservadasLibres()>0) {
     				transporte.llenarPlazaReservada();
-    			}else if(this.esEsencial==false && transporte.getPlazasLibres()>transporte.getPlazasReservadasLibres()){
+    			}else if(this.esEsencial==false && transporte.getPlazasLibres()>transporte.getPlazasReservadasLibres() ){
     				transporte.llenarPlaza();
     			}else {
     	    		throw new ExcepcionNoPlazas(" o estan reservadas");
     	    		//System.out.println("no quedan plazas de su tipo");
     	    		//return -1;
     			}
+    			/*
     			if (this.edad<23)
     				this.descuento=transporte.getDescuentoJoven();
     			if (this.edad>65)
-    				this.descuento=transporte.getDescuentoViejo();
+    				this.descuento=transporte.getDescuentoViejo();*/
     		}
+			if (this.edad<23)
+				this.descuento=transporte.getDescuentoJoven();
+			if (this.edad>65)
+				this.descuento=transporte.getDescuentoViejo();
 
     	}else {
     		throw new ExcepcionNoPlazas("");
@@ -61,13 +67,6 @@ public class Persona {
 		return this.descuento;
     	
     }
-
-	@Override
-	public String toString() {
-		return "Persona [enfermo=" + enfermo + ", diasContanto=" + diasContanto + ", sintomas=" + sintomas
-				+ ", pasaporteCovid=" + pasaporteCovid + ", edad=" + edad + ", esEsencial=" + esEsencial
-				+ ", descuento=" + descuento + "]";
-	}
     
     
 }
