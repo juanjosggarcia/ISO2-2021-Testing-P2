@@ -40,7 +40,7 @@ public class Persona {
     		}else {
     			if (this.esEsencial==true && transporte.getPlazasReservadasLibres()>0) {
     				transporte.llenarPlazaReservada();
-    			}else if(transporte.getPlazasLibres()>transporte.getPlazasReservadasLibres()){
+    			}else if(this.esEsencial==false && transporte.getPlazasLibres()>transporte.getPlazasReservadasLibres()){
     				transporte.llenarPlaza();
     			}else {
     	    		throw new ExcepcionNoPlazas(" o estan reservadas");
@@ -61,4 +61,13 @@ public class Persona {
 		return this.descuento;
     	
     }
+
+	@Override
+	public String toString() {
+		return "Persona [enfermo=" + enfermo + ", diasContanto=" + diasContanto + ", sintomas=" + sintomas
+				+ ", pasaporteCovid=" + pasaporteCovid + ", edad=" + edad + ", esEsencial=" + esEsencial
+				+ ", descuento=" + descuento + "]";
+	}
+    
+    
 }
