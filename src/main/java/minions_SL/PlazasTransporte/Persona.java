@@ -67,6 +67,12 @@ public class Persona {
 		return this.descuento;
     	
     }
-    
+
+	@Override
+	public String toString() {
+		return "Persona [enfermo=" + enfermo + ", diasContanto=" + diasContanto + ", sintomas=" + sintomas
+				+ ", pasaporteCovid=" + pasaporteCovid + ", edad=" + edad + ", esEsencial=" + esEsencial
+				+ ", descuento=" + descuento + "]";
+	}
     
 }

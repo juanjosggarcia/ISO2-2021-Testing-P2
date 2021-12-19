@@ -12,7 +12,8 @@ public class PersonaTest {
 	private static Persona persona;
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public static void setUpBeforeClass() {
+		System.out.println("Antes de todas las pruebas de PersonaTest");
 	}
 	
 	@Before
@@ -25,16 +26,6 @@ public class PersonaTest {
 			e.printStackTrace();
 		}
 	}
-
-	@Test
-	public void testPersona() {
-		try {
-			persona=new Persona(false, -1, false, true, 20, false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		assertNotNull(persona);
-	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,8 +33,9 @@ public class PersonaTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testEvaluarPersona0() {
-		//no puede viajar enfermo=TRUE
+	public void testEvaluarPersona0() throws ExcepcionNoPlazas {
+		//nivel 0
+		//NO PUEDE VIAJAR, enfermo=TRUE
 		boolean enfermo=true; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -55,20 +47,14 @@ public class PersonaTest {
 		
 		double esperado=-1;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 	}
 	
 	@Test
-	public void testEvaluarPersona1() {
-		//no puede viajar sintomas=TRUE
+	public void testEvaluarPersona1() throws ExcepcionNoPlazas {
+		//nivel 0
+		//NO PUEDE VIAJAR, sintomas=TRUE
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=true;
@@ -80,22 +66,16 @@ public class PersonaTest {
 		
 		double esperado=-1;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+	    double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 	}
 	
 	@Test
-	public void testEvaluarPersona2() {
-		//no puede viajar 0<=diasContanto<=10
+	public void testEvaluarPersona2() throws ExcepcionNoPlazas {
+		//nivel 0
+		//NO PUEDE VIAJAR, 0<=diasContanto<=10
 		boolean enfermo=false; 
-		int diasContanto=0;
+		int diasContanto=5;
 		boolean sintomas=false;
 		boolean pasaporteCovid=true;
 		int edad=20;
@@ -105,22 +85,16 @@ public class PersonaTest {
 		
 		double esperado=-1;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+	    double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 	}
 	
 	@Test
-	public void testEvaluarPersona3() {
-		//SI puede viajar diasContanto>10
+	public void testEvaluarPersona3() throws ExcepcionNoPlazas {
+		//nivel 0
+		//SI PUEDE VIAJAR, diasContanto<0
 		boolean enfermo=false; 
-		int diasContanto=11;
+		int diasContanto=-5;
 		boolean sintomas=false;
 		boolean pasaporteCovid=true;
 		int edad=20;
@@ -130,15 +104,27 @@ public class PersonaTest {
 		
 		double noEsperado=-1;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertNotEquals(noEsperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+	    double actual=persona.evaluarPersona(transporte);
+	    assertNotEquals(noEsperado, actual, epsilon);
+	}
+	
+	@Test
+	public void testEvaluarPersona4() throws ExcepcionNoPlazas {
+		//nivel 0
+		//SI PUEDE VIAJAR, diasContanto>10
+		boolean enfermo=false; 
+		int diasContanto=15;
+		boolean sintomas=false;
+		boolean pasaporteCovid=true;
+		int edad=20;
+		boolean esEsencial=false;
+		
+		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
+		
+		double noEsperado=-1;	
+    	double epsilon=0.001;		    	
+	    double actual=persona.evaluarPersona(transporte);
+	    assertNotEquals(noEsperado, actual, epsilon);
 	}
 	
 	
@@ -146,9 +132,10 @@ public class PersonaTest {
 	//	EVALUANDO --> (this.pasaporteCovid==true && transporte.getPlazasLibres()>0)                                      //
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	@Test
-	public void testEvaluarPersona00() {
-		//no puede viajar pasaporteCovid==FALSE
+	@Test(expected = ExcepcionNoPlazas.class)
+	public void testEvaluarPersona00() throws ExcepcionNoPlazas {
+		//nivel 0
+		//NO PUEDE VIAJAR, pasaporteCovid==FALSE
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -158,20 +145,14 @@ public class PersonaTest {
 		
 		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
 
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	assertTrue( true );
-	    }
+	    persona.evaluarPersona(transporte);
 
 	}
 	
-	@Test
-	public void testEvaluarPersona01() {
-		//no puede viajar plazasLibres<=0
+	@Test(expected = ExcepcionNoPlazas.class)
+	public void testEvaluarPersona01() throws ExcepcionNoPlazas {
+		//nivel 0
+		//NO PUEDE VIAJAR, plazasLibres<=0
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -184,13 +165,7 @@ public class PersonaTest {
 		while(transporte.getPlazasLibres()>0)
 			transporte.llenarPlaza();
 
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	assertTrue( true );
-	    }
+	    persona.evaluarPersona(transporte);
 
 	}
 	
@@ -200,10 +175,10 @@ public class PersonaTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testEvaluarPersona001() {
+	public void testEvaluarPersona001() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 4 restricciones del 30% de plazasTotales, plazasReservadasTotales del 90%
-		//SI puede viajar pasaporteCovid==true && plazasLibres>0
-		//no puede viajar nivelRestricciones=4 && edad>65
+		//SI PUEDE VIAJAR, pasaporteCovid==true && plazasLibres>0
+		//NO PUEDE VIAJAR, nivelRestricciones=4 && edad>65
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -219,22 +194,16 @@ public class PersonaTest {
 		
 		double esperado=-1;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
 	
 	@Test
-	public void testEvaluarPersona002() {
-		//SI puede viajar pasaporteCovid==true && plazasLibres>0
-		//SI puede viajar nivelRestricciones!=4 && edad>65
+	public void testEvaluarPersona002() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
+		//nivel 0
+		//SI PUEDE VIAJAR, pasaporteCovid==true && plazasLibres>0
+		//SI PUEDE VIAJAR, nivelRestricciones!=4 && edad>65
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -250,23 +219,16 @@ public class PersonaTest {
 		
 		double esperado=0.20;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+	    double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
 	
 	@Test
-	public void testEvaluarPersona003() {
+	public void testEvaluarPersona003() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 4 restricciones del 30% de plazasTotales, plazasReservadasTotales del 90%
-		//SI puede viajar pasaporteCovid==true && plazasLibres>0
-		//SI puede viajar nivelRestricciones=4 && edad<65	
+		//SI PUEDE VIAJAR, pasaporteCovid==true && plazasLibres>0
+		//SI PUEDE VIAJAR, nivelRestricciones=4 && edad<65	
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -282,15 +244,8 @@ public class PersonaTest {
 		
 		double esperado=1.50;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
 	
@@ -300,8 +255,9 @@ public class PersonaTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testEvaluarPersona0000() {
-		//SI puede viajar nivelRestricciones<2
+	public void testEvaluarPersona0000() throws ExcepcionNoPlazas {
+		//nivel 0
+		//SI PUEDE VIAJAR, nivelRestricciones<2
 		//edad<23 descuentoJoven		
 		boolean enfermo=false; 
 		int diasContanto=-1;
@@ -314,50 +270,15 @@ public class PersonaTest {
 
 		double esperado=0.4;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
-
-	/*
-	@Test
-	public void testEvaluarPersona0001() {
-		//SI puede viajar nivelRestricciones<2
-		//edad>65 descuentoViejo		
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=70;
-		boolean esEsencial=false;
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-
-		double esperado=0.2;	
-    	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
-
-	}*/
 	
 	@Test
-	public void testEvaluarPersona0002() {
+	public void testEvaluarPersona0002() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 1 restricciones del 80% de plazasTotales
-		//SI puede viajar nivelRestricciones<2
+		//SI PUEDE VIAJAR, nivelRestricciones<2
 		//edad<23 descuentoJoven
 		boolean enfermo=false; 
 		int diasContanto=-1;
@@ -374,22 +295,15 @@ public class PersonaTest {
 
 		double esperado=0.7;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
 	
 	@Test
-	public void testEvaluarPersona0003() {
+	public void testEvaluarPersona0003() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 1 restricciones del 80% de plazasTotales
-		//SI puede viajar nivelRestricciones<2
+		//SI PUEDE VIAJAR, nivelRestricciones<2
 		//edad>65 descuentoViejo		
 		boolean enfermo=false; 
 		int diasContanto=-1;
@@ -406,16 +320,8 @@ public class PersonaTest {
 
 		double esperado=0.5;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
-
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 	}
 	
 	
@@ -424,9 +330,9 @@ public class PersonaTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testEvaluarPersona00000() {
+	public void testEvaluarPersona00000() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//esEsencial=TRUE && plazasReservadasLibres>0
+		//SI PUEDE VIAJAR, esEsencial=TRUE && plazasReservadasLibres>0
 		//edad<23
 		boolean enfermo=false; 
 		int diasContanto=-1;
@@ -443,22 +349,15 @@ public class PersonaTest {
 
 		double esperado=1.00;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
 	
-	@Test
-	public void testEvaluarPersona00001() {
+	@Test(expected = ExcepcionNoPlazas.class)
+	public void testEvaluarPersona00001() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//esEsencial=TRUE && plazasReservadasLibres<=0
+		//NO PUEDE VIAJAR, esEsencial=TRUE && plazasReservadasLibres<=0
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -469,22 +368,13 @@ public class PersonaTest {
 		int nivelRestricciones = 2;
 		transporte.setNivelRestricciones(nivelRestricciones);
 		transporte.obtenerRestrinciones();
-
-		System.out.println("ESTE ES");
-		System.out.println(transporte.toString());
 		
 		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
 		
 		while (transporte.getPlazasReservadasLibres()>0)
 			transporte.llenarPlazaReservada();
 
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	assertTrue( true );
-	    }
+	    persona.evaluarPersona(transporte);
 
 	}
 	
@@ -493,11 +383,10 @@ public class PersonaTest {
 	//	(this.esEsencial==false && transporte.getPlazasLibres()>transporte.getPlazasReservadasLibres() )                 //
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	@Test
-	public void testEvaluarPersona00002() {
+	@Test(expected = ExcepcionNoPlazas.class)
+	public void testEvaluarPersona00002() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//esEsencial=FALSE && plazasReservadasLibres>0
-		//esEsencial=FALSE && plazasLibres<=plazasReservadasLibres
+		//NO PUEDE VIAJAR, esEsencial=FALSE && plazasLibres<=plazasReservadasLibres (no quedan plazas normales libres)
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
@@ -514,26 +403,20 @@ public class PersonaTest {
 		while (transporte.getPlazasLibres()>transporte.getPlazasReservadasLibres())
 			transporte.llenarPlaza();
 
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	assertTrue( true );
-	    }
+	    persona.evaluarPersona(transporte);
 
 	}
 	@Test
-	public void testEvaluarPersona00003() {
+	public void testEvaluarPersona00003() throws ExcepcionNoPlazas, ExcepcionNivelNoValido {
 		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//esEsencial=FALSE && plazasLibres>plazasReservadasLibres
+		//SI PUEDE VIAJAR, esEsencial=FALSE && plazasLibres>plazasReservadasLibres (quedan plazas normales libres)
 		//edad>65
 		boolean enfermo=false; 
 		int diasContanto=-1;
 		boolean sintomas=false;
 		boolean pasaporteCovid=true;
 		int edad=70;
-		boolean esEsencial=true;
+		boolean esEsencial=false;
 		
 		int nivelRestricciones = 2;
 		transporte.setNivelRestricciones(nivelRestricciones);
@@ -543,273 +426,9 @@ public class PersonaTest {
 
 		double esperado=1.2;	
     	double epsilon=0.001;		
-
-	    try {
-	    	//System.out.println(transporte.toString());
-	    	
-	    	double actual=persona.evaluarPersona(transporte);;
-	    	assertEquals(esperado, actual, epsilon);
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    }
+    	double actual=persona.evaluarPersona(transporte);
+	    assertEquals(esperado, actual, epsilon);
 
 	}
-
-	
-	
-	
-	
-	
-	
-	/*
-	@Test
-	public void testEvaluarPersona0005() {
-		//nivel 3 restricciones del 40% de plazasTotales, plazasReservadasTotales del 80%
-		//no quedan plazas libres reservadas esencial=TRUE
-		boolean enfermo=false;
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=true;
-		
-		transporte.setNivelRestricciones(3);
-		transporte.obtenerRestrinciones();
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		transporte.llenarPlazaReservada();
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	System.out.println("bien, ha saltado la excepcion");
-	    	assertTrue( true );
-	    }
-
-	}
-	
-	@Test
-	public void testEvaluarPersona0006() {
-		//nivel 4 restricciones del 30% de plazasTotales, plazasReservadasTotales del 90%
-		//no quedan plazas libres reservadas esencial=TRUE
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=true;
-		
-		transporte.setNivelRestricciones(4);
-		transporte.obtenerRestrinciones();
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		transporte.llenarPlazaReservada();
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	System.out.println("bien, ha saltado la excepcion");
-	    	assertTrue( true );
-	    }
-	    
-	}
-	
-	@Test
-	public void testEvaluarPersona0007() {
-		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//no quedan plazas libres reservadas esencial=TRUE
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=true;
-		
-		transporte.setNivelRestricciones(2);
-		transporte.obtenerRestrinciones();
-
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);	
-		
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	    	assertTrue( true );
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    	System.out.println("error, ha saltado la excepcion");
-	    }
-	    
-	}
-	
-	@Test
-	public void testEvaluarPersona0008() {
-		//nivel 3 restricciones del 40% de plazasTotales, plazasReservadasTotales del 80%
-		//no quedan plazas libres reservadas esencial=TRUE
-		boolean enfermo=false;
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=true;
-		
-		transporte.setNivelRestricciones(3);
-		transporte.obtenerRestrinciones();
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	    	assertTrue( true );
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    	System.out.println("error, ha saltado la excepcion");
-	    }
-	    
-	}
-	
-	@Test
-	public void testEvaluarPersona0000002() {
-		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//no quedan plazas libres reservadas esencial FALSE
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=false;
-		
-		transporte.setNivelRestricciones(2);
-		transporte.obtenerRestrinciones();
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		transporte.llenarPlaza();
-		transporte.llenarPlaza();
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	System.out.println("bien, ha saltado la excepcion");
-	    	assertTrue( true );
-	    }
-
-	}
-	
-	@Test
-	public void testEvaluarPersona000003() {
-		//nivel 3 restricciones del 40% de plazasTotales, plazasReservadasTotales del 80%
-		//no quedan plazas libres reservadas esencial FALSE
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=false;
-		
-		transporte.setNivelRestricciones(3);
-		transporte.obtenerRestrinciones();
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		transporte.llenarPlaza();
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	System.out.println("bien, ha saltado la excepcion");
-	    	assertTrue( true );
-	    }
-
-	}
-	
-	@Test
-	public void testEvaluarPersona00004() {
-		//nivel 4 restricciones del 30% de plazasTotales, plazasReservadasTotales del 90%
-		//no quedan plazas libres reservadas esencial FALSE
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=20;
-		boolean esEsencial=false;
-		
-		transporte.setNivelRestricciones(4);
-		transporte.obtenerRestrinciones();
-		
-		System.out.println(transporte.toString());
-		
-		transporte.llenarPlaza();
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	        fail("No ha saltado la excepcion");
-	    } catch (ExcepcionNoPlazas e) {
-	    	System.out.println("bien, ha saltado la excepcion");
-	    	assertTrue( true );
-	    }
-	    
-	}
-	
-	@Test
-	public void testEvaluarPersona000002() {
-		//nivel 2 restricciones del 60% de plazasTotales, plazasReservadasTotales del 60%
-		//no quedan plazas libres reservadas esencial FALSE
-		//edad > 65
-		boolean enfermo=false; 
-		int diasContanto=-1;
-		boolean sintomas=false;
-		boolean pasaporteCovid=true;
-		int edad=70;
-		boolean esEsencial=false;
-		
-		transporte.setNivelRestricciones(2);
-		transporte.obtenerRestrinciones();
-		System.out.println(transporte.toString());
-		
-		persona=new Persona(enfermo, diasContanto, sintomas, pasaporteCovid, edad, esEsencial);
-		
-		System.out.println("numero plazas disponibles normales: "+transporte.getPlazasLibres()+"; plazas reservadas libres: "+transporte.getPlazasReservadasLibres());
-
-	    try {
-	    	System.out.println(transporte.toString());
-	    	persona.evaluarPersona(transporte);
-	    	assertTrue( true );
-	    } catch (ExcepcionNoPlazas e) {
-	    	fail("Error, ha saltado la excepcion");
-	    	System.out.println("error, ha saltado la excepcion");
-	    }
-
-	}*/
 
 }

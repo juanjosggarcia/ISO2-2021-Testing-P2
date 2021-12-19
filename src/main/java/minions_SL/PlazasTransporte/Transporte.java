@@ -11,9 +11,9 @@ public class Transporte {
 	private double descuentoViejo;
 	
 	
-	public Transporte(int nivelRestricciones, int plazasTotales) {
+	public Transporte(int numCasos, int plazasTotales) throws ExcepcionNivelNoValido {
 		super();
-		this.nivelRestricciones = nivelRestricciones;
+		this.nivelRestricciones = obtenerNivelIA(numCasos);
 		this.plazasTotales = plazasTotales;
 		this.plazasLibres = plazasTotales;
 		this.plazasReservadasTotales = -1;
@@ -38,20 +38,12 @@ public class Transporte {
 		return plazasLibres;
 	}
 
-	public void setPlazasLibres(int plazasLibres) {
-		this.plazasLibres = plazasLibres;
-	}
-
 	public int getPlazasReservadasTotales() {
 		return plazasReservadasTotales;
 	}
 
 	public int getPlazasReservadasLibres() {
 		return plazasReservadasLibres;
-	}
-
-	public void setPlazasReservadasLibres(int plazasReservadasLibres) {
-		this.plazasReservadasLibres = plazasReservadasLibres;
 	}
 
 	public double getDescuentoJoven() {
@@ -71,7 +63,23 @@ public class Transporte {
 		this.plazasLibres-=1;
 	}
 	
-	public int obtenerRestrinciones() {
+    public int obtenerNivelIA(int n) throws ExcepcionNivelNoValido {
+    	int nivel=4;
+    	if (n<0)
+    		throw new ExcepcionNivelNoValido();
+    	if (n<100)
+    		nivel= 0;
+        else if (n<=200)
+        	nivel=1;
+        else if (n<=300)
+        	nivel=2;
+        else if (n<=500)
+        	nivel=3;
+
+    	return nivel;
+    }
+	
+	public int obtenerRestrinciones() throws ExcepcionNivelNoValido {
 		switch (this.nivelRestricciones) {
 			case 0:
 				this.descuentoJoven=0.40;
@@ -108,7 +116,7 @@ public class Transporte {
 				this.descuentoViejo=-1;
 				break;
 			default:
-				return -1;
+				throw new ExcepcionNivelNoValido();
 		}
 		return 0;
 	}
