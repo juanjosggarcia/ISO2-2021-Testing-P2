@@ -21,16 +21,6 @@ public class App
 			e.toString();
 		}
 		
-		/*
-		coche.obtenerRestrinciones();
-		
-		Persona juan=new Persona(false, -1, false, true, 20,
-				false);
-		Persona maria=new Persona(false, -1, false, true, 20,
-				false);
-		Persona drGru=new Persona(false, -1, false, true, 20,
-				true);*/
-		
 	}
 
 }
