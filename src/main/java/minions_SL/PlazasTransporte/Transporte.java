@@ -11,9 +11,9 @@ public class Transporte {
 	private double descuentoViejo;
 	
 	
-	public Transporte(int nivelRestricciones, int plazasTotales) {
+	public Transporte(int numCasos, int plazasTotales) throws ExcepcionNivelNoValido {
 		super();
-		this.nivelRestricciones = nivelRestricciones;
+		this.nivelRestricciones = obtenerNivelIA(numCasos);
 		this.plazasTotales = plazasTotales;
 		this.plazasLibres = plazasTotales;
 		this.plazasReservadasTotales = -1;
@@ -34,48 +34,24 @@ public class Transporte {
 		return plazasTotales;
 	}
 
-	public void setPlazasTotales(int plazasTotales) {
-		this.plazasTotales = plazasTotales;
-	}
-
 	public int getPlazasLibres() {
 		return plazasLibres;
-	}
-
-	public void setPlazasLibres(int plazasLibres) {
-		this.plazasLibres = plazasLibres;
 	}
 
 	public int getPlazasReservadasTotales() {
 		return plazasReservadasTotales;
 	}
 
-	public void setPlazasReservadasTotales(int plazasReservadasTotales) {
-		this.plazasReservadasTotales = plazasReservadasTotales;
-	}
-
 	public int getPlazasReservadasLibres() {
 		return plazasReservadasLibres;
-	}
-
-	public void setPlazasReservadasLibres(int plazasReservadasLibres) {
-		this.plazasReservadasLibres = plazasReservadasLibres;
 	}
 
 	public double getDescuentoJoven() {
 		return descuentoJoven;
 	}
 
-	public void setDescuentoJoven(double descuentoJoven) {
-		this.descuentoJoven = descuentoJoven;
-	}
-
 	public double getDescuentoViejo() {
 		return descuentoViejo;
-	}
-
-	public void setDescuentoViejo(double descuentoViejo) {
-		this.descuentoViejo = descuentoViejo;
 	}
 
 	public void llenarPlaza() {
@@ -87,7 +63,23 @@ public class Transporte {
 		this.plazasLibres-=1;
 	}
 	
-	public void obtenerRestrinciones() {
+    public int obtenerNivelIA(int n) throws ExcepcionNivelNoValido {
+    	int nivel=4;
+    	if (n<0)
+    		throw new ExcepcionNivelNoValido();
+    	if (n<100)
+    		nivel= 0;
+        else if (n<=200)
+        	nivel=1;
+        else if (n<=300)
+        	nivel=2;
+        else if (n<=500)
+        	nivel=3;
+
+    	return nivel;
+    }
+	
+	public int obtenerRestrinciones() throws ExcepcionNivelNoValido {
 		switch (this.nivelRestricciones) {
 			case 0:
 				this.descuentoJoven=0.40;
@@ -104,6 +96,7 @@ public class Transporte {
 				this.plazasLibres=this.plazasTotales;
 				this.plazasReservadasTotales=(int) (this.plazasTotales*0.6);
 				this.plazasReservadasLibres=this.plazasReservadasTotales;
+				this.descuentoJoven=1.00;
 				this.descuentoViejo=1.20;
 				break;
 			case 3:
@@ -123,8 +116,9 @@ public class Transporte {
 				this.descuentoViejo=-1;
 				break;
 			default:
-				break;
+				throw new ExcepcionNivelNoValido();
 		}
+		return 0;
 	}
 
 	@Override
